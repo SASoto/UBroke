@@ -22,7 +22,7 @@ int main()
 	int subject = 0;
 	cin >> subject;
 
-	cout << "Well, let's find out!";
+	cout << "Well, let's find out!" << endl;
 
 	switch (subject) {
 		case 1:

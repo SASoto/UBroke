@@ -17,6 +17,11 @@ extern double sevenUP;
 extern double sevenExpP;
 extern double thirtyUP;
 
+extern double dailyCost;
+extern double weeklyCost;
+extern double monthlyCost;
+extern double yearlyCost;
+
 enum Months {January, February, March, April, May, June, July,
 			August, September, October, November, December};
 
@@ -27,6 +32,7 @@ class UBAccount {
 		void CalcWMY();
 		void CalcMetro();
 		void CheckUser();
+		void OPMetro(int, int);
 		
 		//Set Personal Info
 		void setUser(string username) {

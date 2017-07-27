@@ -10,8 +10,8 @@ double thirtyUP = 121.00;
 void UBAccount::CheckUser() {
 	string response;
 	do {
-		cout << "Please enter your username or signup with a new UBroke account." << endl;
 		string username;
+		cout << "Please enter your username or signup with a new UBroke account (no spaces)." << endl;
 		cin >> username;
 
 		int tracker = 0;
@@ -131,7 +131,9 @@ void UBAccount::CalcMetro() {
 	cin >> expDayTrips;
 
 	int regDayTrips = numof_trips - expDayTrips;
-	double dailyCost = ((regDayTrips - transferT) * regR) + (expDayTrips * expR);
+	int costRTW = (regDayTrips - transferT) * regR;
+	int costETW = expDayTrips * expR;
+	double dailyCost = costRTW + costETW;
 	cout << "You spend $" << dailyCost << " every day on bus/train rides." << endl;
 
 	int weeklyTrips;
@@ -165,4 +167,13 @@ void UBAccount::CalcMetro() {
 
 	double yearlyCost = monthlyCost * 12;
 	cout << "You spend $" << yearlyCost << " every year on bus/train rides." << endl;
+
+	OPMetro(costRTW, costETW);
+}
+
+void UBAccount::OPMetro(int costRTW, int costETW) {
+	if ((costRTW  > sevenUP) || ((costRTW + costETW) > sevenUP)) {
+		sevenUP * (30.42 / 7);
+	}
+	
 }
