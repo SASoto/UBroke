@@ -131,9 +131,9 @@ void UBAccount::CalcMetro() {
 	cin >> expDayTrips;
 
 	int regDayTrips = numof_trips - expDayTrips;
-	int costRTW = (regDayTrips - transferT) * regR;
-	int costETW = expDayTrips * expR;
-	double dailyCost = costRTW + costETW;
+	int costRTD = (regDayTrips - transferT) * regR;
+	int costETD = expDayTrips * expR;
+	double dailyCost = costRTD + costETD;
 	cout << "You spend $" << dailyCost << " every day on bus/train rides." << endl;
 
 	int weeklyTrips;
@@ -168,12 +168,35 @@ void UBAccount::CalcMetro() {
 	double yearlyCost = monthlyCost * 12;
 	cout << "You spend $" << yearlyCost << " every year on bus/train rides." << endl;
 
-	OPMetro(costRTW, costETW);
+	OPMetro(costRTD, costETD);
 }
 
-void UBAccount::OPMetro(int costRTW, int costETW) {
-	if ((costRTW  > sevenUP) || ((costRTW + costETW) > sevenUP)) {
-		sevenUP * (30.42 / 7);
+void UBAccount::OPMetro(int costRTD, int costETD) {
+	//5% bonus added to metrocard purchases or additions of of $5.50 or mroe
+	//last decimal rounded up in bonus fare
+	//same deal with express bus fare
+	//dont forget about reduced fare customers
+	double totalCostD = costRTD + costETD;
+	double costSUPM = sevenUP * (30.42 / 7);
+	if (totalCostD > sevenUP) {
+		//if (costSUPM > thirtyUP) {
+			cout << "The most optimal way to pay for your bus/train rides each month is to buy a single thirty-day unlimited Metrocard." << endl;
+		//}
+		/*(else {
+			double costLeftOver = thirtyUP - costSUPM;
+			costLeftOver / regR;
+		}*/
 	}
-	
+	else {
+		double costM = (costRTD + costETD) * (30.42 / 7);
+		if (costM > costSUPM) {
+			cout << "The most optimal way to pay for your bus/train rides each month is to buy a single thirty-day unlimited Metrocard." << endl;
+		}
+		else if (costM > thirtyUP) {
+			cout << "The most optimal way to pay for your bus/train rides each month is to buy a single thirty-day unlimited Metrocard." << endl;
+		}
+		else {
+			cout << "Continue paying $" << totalCostD << "a day for your Metrocards." << endl;
+		}
+	}
 }
