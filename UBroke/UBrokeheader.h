@@ -31,13 +31,14 @@ class UBAccount {
 	public:
 		int hour_or_week;
 		void CheckUser();
-		void ChangeUser(string newUserName);
+		void RetrieveInfo();
+		void ChangeUser(string);
 		void Questionnaire();
 		void CalcDailyInc(string);
 		void CalcWMY();
 		void WriteTo();
 		void CalcMetro();
-		void OPMetro(int, int);
+		void OPMetro(double, double);
 		void MakeChanges();
 
 		//Set Personal Info

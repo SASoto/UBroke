@@ -31,6 +31,7 @@ void UBAccount::CheckUser() {
 
 		if (tracker == 1) {
 			setUser(userName);
+			this->RetrieveInfo();
 		}
 		else {
 			cout << "Would you like to create a UBroke account with this username? ";
@@ -51,30 +52,38 @@ void UBAccount::CheckUser() {
 	} while (response == "no" || response == "No");
 }
 
-void UBAccount::ChangeUser(string newUserName) {
-	string currUserName = getUser();
-	int len = currUserName.length();
-	int reqSpace = lof_Spaces + len;
-	if (reqSpace > 13) {
-		while (reqSpace != 13) {
-			reqSpace -= 1;
-			lof_Spaces -= 1;
-		}
-	}
-
+void UBAccount::RetrieveInfo() {
 	ifstream UBfile;
 	UBfile.open("UBrokeAccts.txt");
 	string searchStr;
 	while (UBfile >> searchStr) {
-		if (searchStr == currUserName)
-		{
+		if (searchStr == userName) {
+			int tracker = 0;
+			double incomes;
+			while(UBfile >> incomes) {
+				cout << "INCOMES: " << incomes << endl;
+				switch (tracker) {
+				case 0:
+					setDailyInc(incomes);
+					tracker++;
+					break;
+				case 1:
+					setWeeklyInc(incomes);
+					tracker++;
+					break;
+				case 2:
+					setMonthlyInc(incomes);
+					tracker++;
+					break;
+				case 3:
+					setYearlyInc(incomes);
+					tracker++;
+					break;
+				default:
+					break;
+				}
+			}
 			UBfile.close();
-			cout << "Im in this function" << endl;
-			//size_t pos = searchStr.find(currUserName);
-			ofstream print;
-			print.open("UBrokeAccts.txt");
-			print << newUserName << setfill(' ') << setw(lof_Spaces);
-			print.close();
 			break;
 		}
 	}
@@ -120,6 +129,35 @@ void UBAccount::Questionnaire() {
 	}
 
 	this->CalcDailyInc(getsPaid);
+}
+
+void UBAccount::ChangeUser(string newUserName) {
+	string currUserName = getUser();
+	int len = currUserName.length();
+	int reqSpace = lof_Spaces + len;
+	if (reqSpace > 13) {
+		while (reqSpace != 13) {
+			reqSpace -= 1;
+			lof_Spaces -= 1;
+		}
+	}
+
+	ifstream UBfile;
+	UBfile.open("UBrokeAccts.txt");
+	string searchStr;
+	while (UBfile >> searchStr) {
+		if (searchStr == currUserName)
+		{
+			UBfile.close();
+			ofstream print;
+			print.open("UBrokeAccts.txt");
+			print << newUserName << setfill(' ') << setw(lof_Spaces);
+			print.close();
+			setUser(newUserName);
+			this->WriteTo();
+			break;
+		}
+	}
 }
 
 void UBAccount::CalcDailyInc(string getsPaid) {
@@ -172,13 +210,13 @@ void UBAccount::WriteTo() {
 			UBfile.close();
 			//cout << "Im in the func" << endl;
 			double dailyInc = getDailyInc();
-			//cout << "Daily: " << dailyInc << endl;
+			cout << "Daily: " << dailyInc << endl;
 			double weeklyInc = getWeeklyInc();
-			//cout << "Weekly: " << weeklyInc << endl;
+			cout << "Weekly: " << weeklyInc << endl;
 			double monthlyInc = getMonthlyInc();
-			//cout << "Monthly: " << monthlyInc << endl;
+			cout << "Monthly: " << monthlyInc << endl;
 			double yearlInc = getYearlyInc();
-			//cout << "Yearly: " << yearlyInc << endl;
+			cout << "Yearly: " << yearlyInc << endl;
 			ofstream print("UBrokeAccts.txt", ios_base::app);
 			print << setw(3) << setfill(' ') << setw(13) << dailyInc << setw(3) << setfill(' ') << setw(13) << weeklyInc << setw(3) << setfill(' ') << setw(13) << monthlyInc << setw(3) << setfill(' ') << setw(13) << yearlyInc << "\n";
 			print.close();
@@ -205,8 +243,8 @@ void UBAccount::CalcMetro() {
 	cin >> expDayTrips;
 
 	int regDayTrips = numof_trips - expDayTrips;
-	int costRTD = (regDayTrips - transferT) * regR;
-	int costETD = expDayTrips * expR;
+	double costRTD = (regDayTrips - transferT) * regR;
+	double costETD = expDayTrips * expR;
 	double dailyCost = costRTD + costETD;
 	cout << "You spend $" << dailyCost << " every day on bus/train rides." << endl;
 
@@ -245,7 +283,7 @@ void UBAccount::CalcMetro() {
 	OPMetro(costRTD, costETD);
 }
 
-void UBAccount::OPMetro(int costRTD, int costETD) {
+void UBAccount::OPMetro(double costRTD, double costETD) {
 	//5% bonus added to metrocard purchases or additions of of $5.50 or mroe
 	//last decimal rounded up in bonus fare
 	//same deal with express bus fare
