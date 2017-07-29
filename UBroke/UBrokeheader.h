@@ -18,10 +18,11 @@ extern double sevenUP;
 extern double sevenExpP;
 extern double thirtyUP;
 
-extern double dailyCost;
+extern int lof_Spaces;
+/*extern double dailyCost;
 extern double weeklyCost;
 extern double monthlyCost;
-extern double yearlyCost;
+extern double yearlyCost;*/
 
 enum Months {January, February, March, April, May, June, July,
 			August, September, October, November, December};
@@ -30,13 +31,15 @@ class UBAccount {
 	public:
 		int hour_or_week;
 		void CheckUser();
-		void CalcDailyInc();
+		void ChangeUser(string newUserName);
+		void Questionnaire();
+		void CalcDailyInc(string);
 		void CalcWMY();
 		void WriteTo();
 		void CalcMetro();
 		void OPMetro(int, int);
 		void MakeChanges();
-		
+
 		//Set Personal Info
 		void setUser(string username) {
 			this->userName = username;

@@ -7,11 +7,13 @@ double sevenUP = 32.00;
 double sevenExpP = 59.50;
 double thirtyUP = 121.00;
 
+int lof_Spaces;
+
 void UBAccount::CheckUser() {
 	string response;
 	do {
 		string userName;
-		cout << "Please enter your username or signup with a new UBroke account (no spaces)." << endl;
+		cout << "Please enter your username or signup with a new UBroke account (no spaces and with a max of 10 char)." << endl;
 		cin >> userName;
 
 		int tracker = 0;
@@ -37,18 +39,48 @@ void UBAccount::CheckUser() {
 			if (response == "yes" || response == "Yes" || response == "y" || response == "Y") {
 				//ofstream UBfile;
 				//UBfile.open("UBrokeAccts.txt");
+				lof_Spaces = 13 - userName.length();
 				ofstream print("UBrokeAccts.txt", ios_base::app);
-				print << userName;
+				print << userName << setfill(' ') << setw(lof_Spaces);
 				setUser(userName);
 				print.close();
 
-				this->CalcDailyInc();
+				this->Questionnaire();
 			}
 		}
 	} while (response == "no" || response == "No");
 }
 
-void UBAccount::CalcDailyInc() {
+void UBAccount::ChangeUser(string newUserName) {
+	string currUserName = getUser();
+	int len = currUserName.length();
+	int reqSpace = lof_Spaces + len;
+	if (reqSpace > 13) {
+		while (reqSpace != 13) {
+			reqSpace -= 1;
+			lof_Spaces -= 1;
+		}
+	}
+
+	ifstream UBfile;
+	UBfile.open("UBrokeAccts.txt");
+	string searchStr;
+	while (UBfile >> searchStr) {
+		if (searchStr == currUserName)
+		{
+			UBfile.close();
+			cout << "Im in this function" << endl;
+			//size_t pos = searchStr.find(currUserName);
+			ofstream print;
+			print.open("UBrokeAccts.txt");
+			print << newUserName << setfill(' ') << setw(lof_Spaces);
+			print.close();
+			break;
+		}
+	}
+}
+
+void UBAccount::Questionnaire() {
 	cout << "Do you get paid hourly or weekly? ";
 	string getsPaid;
 	cin >> getsPaid;
@@ -87,6 +119,10 @@ void UBAccount::CalcDailyInc() {
 		setHours(numof_hours);
 	}
 
+	this->CalcDailyInc(getsPaid);
+}
+
+void UBAccount::CalcDailyInc(string getsPaid) {
 	double retDays = getDays();
 	double retHours = getHours();
 	double retSalary = getSalary();
@@ -241,46 +277,39 @@ void UBAccount::OPMetro(int costRTD, int costETD) {
 }
 
 void UBAccount::MakeChanges() {
-	cout << "What do you want to change about your account?" << endl;
-	cout << "1 | " << endl;
-	cout << "2 | " << endl;
-	cout << "3 | " << endl;
-	cout << "4 | " << endl;
-	cout << "5 | " << endl;
-	cout << "6 | " << endl;
-
 	bool displaymess = false;
 	int response;
 	do {
-		if (displaymess == true) {
+		if (displaymess == true)
 			cout << "Anything else you want to change?" << endl;
-			cin >> response;
-		}
+		else
+			cout << "What do you want to change about your account?" << endl;
+		
+		cout << "1 | Username" << endl;
+		cout << "2 | Salary" << endl;
+		cout << "9 | Go Back." << endl;
+		cin >> response;
+
 		switch (response) {
-			case 1:
+			case 1: {
+				cout << "Enter your new username (no space and with a 10 chararacter maximum): ";
+				string newUserName;
+				cin >> newUserName;
+				this->ChangeUser(newUserName);
 				displaymess = true;
 				break;
+			}
 			case 2:
+				cout << "In order to change your salary information, you must first answer a few questions beforehand." << endl;
+				this->Questionnaire();
 				displaymess= true;
-				break;
-			case 3:
-				displaymess = true;
-				break;
-			case 4:
-				displaymess = true;
-				break;
-			case 5:
-				displaymess = true;
-				break;
-			case 6:
-				displaymess = true;
 				break;
 			case 9:
 				displaymess = false;
 				break;
 			default:
-				cout << "Oops! That's not an available option." << endl;
 				displaymess = false;
+				cout << "Oops! That's not an available option." << endl;
 				break;
 		}
 	} while (response != 9);

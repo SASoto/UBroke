@@ -17,29 +17,41 @@ int main()
 	//user.CalcDailyInc();
 	//user.CalcWMY();
 
-	cout << "Are you wondering if you can afford:" << endl;
-	cout << "1 | Metrocards?" << endl;
-	cout << "5 | Change Account Info?" << endl;
+	bool displaymess = false;
 	int subject = 0;
-	cin >> subject;
+	do {
+		if (displaymess == true)
+			cout << "Anything else you want to check?" << endl;
+		else 
+			cout << "What do you want to do today?" << endl;
 
-	cout << "Well, let's find out!" << endl;
+		cout << "1 | Figure out Metrocard payments." << endl;
+		cout << "5 | Change Account Info." << endl;
+		cout << "9 | Exit." << endl;
+		cin >> subject;
 
-	switch (subject) {
+		switch (subject) {
 		case 1:
+			displaymess = true;
 			user.CalcMetro();
 			break;
 		case 5:
+			displaymess = true;
 			user.MakeChanges();
-		default:
 			break;
-	}
+		case 9:
+			displaymess = false;
+			cout << "Take care!" << endl;
+			char response;
+			cin >> response;
 
-	cout << "Well, there you go." << endl;
-	cout << "Continue? ";
-	char response;
-	cin >> response;
-
-    return 0;
+			return 0;
+		default:
+			displaymess = false;
+			cout << "Oops! That's not an available option." << endl;
+			break;
+		}
+		cout << "Anything more? ";
+	} while (subject != 9);
 }
 
