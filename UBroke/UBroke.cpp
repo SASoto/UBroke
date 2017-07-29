@@ -14,11 +14,12 @@ int main()
 	user.CheckUser();
 	
 	cout << "Welcome " << user.getUser() << endl;
-	user.CalcDailyInc();
-	user.CalcWMY();
+	//user.CalcDailyInc();
+	//user.CalcWMY();
 
 	cout << "Are you wondering if you can afford:" << endl;
 	cout << "1 | Metrocards?" << endl;
+	cout << "5 | Change Account Info?" << endl;
 	int subject = 0;
 	cin >> subject;
 
@@ -28,6 +29,8 @@ int main()
 		case 1:
 			user.CalcMetro();
 			break;
+		case 5:
+			user.MakeChanges();
 		default:
 			break;
 	}

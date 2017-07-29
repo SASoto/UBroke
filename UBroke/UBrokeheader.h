@@ -4,6 +4,7 @@
 #include <utility>
 #include <string>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 using namespace std;
 
@@ -28,11 +29,13 @@ enum Months {January, February, March, April, May, June, July,
 class UBAccount {
 	public:
 		int hour_or_week;
+		void CheckUser();
 		void CalcDailyInc();
 		void CalcWMY();
+		void WriteTo();
 		void CalcMetro();
-		void CheckUser();
 		void OPMetro(int, int);
+		void MakeChanges();
 		
 		//Set Personal Info
 		void setUser(string username) {

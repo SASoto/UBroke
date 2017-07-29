@@ -10,35 +10,39 @@ double thirtyUP = 121.00;
 void UBAccount::CheckUser() {
 	string response;
 	do {
-		string username;
+		string userName;
 		cout << "Please enter your username or signup with a new UBroke account (no spaces)." << endl;
-		cin >> username;
+		cin >> userName;
 
 		int tracker = 0;
 		ifstream UBfile;
 		UBfile.open("UBrokeAccts.txt");
 		string searchStr;
 		while (UBfile >> searchStr) {
-			if (searchStr == username)
+			if (searchStr == userName)
 			{
 				tracker = 1;
+				UBfile.close();
 				break;
 			}
 		}
-		UBfile.close();
 
 		if (tracker == 1) {
-			setUser(username);
+			setUser(userName);
 		}
 		else {
 			cout << "Would you like to create a UBroke account with this username? ";
 			cin >> response;
 
 			if (response == "yes" || response == "Yes" || response == "y" || response == "Y") {
+				//ofstream UBfile;
+				//UBfile.open("UBrokeAccts.txt");
 				ofstream print("UBrokeAccts.txt", ios_base::app);
-				print << username << "\n";
-				setUser(username);
-				UBfile.close();
+				print << userName;
+				setUser(userName);
+				print.close();
+
+				this->CalcDailyInc();
 			}
 		}
 	} while (response == "no" || response == "No");
@@ -51,7 +55,7 @@ void UBAccount::CalcDailyInc() {
 
 	if (getsPaid == "hourly" || getsPaid == "Hourly")
 	{
-		hour_or_week = 0;
+		//hour_or_week = 0;
 		cout << "How much do you get paid hourly? $";
 		double salary;
 		cin >> salary;
@@ -66,7 +70,7 @@ void UBAccount::CalcDailyInc() {
 	}
 	else
 	{
-		hour_or_week = 1;
+		//hour_or_week = 1;
 		cout << "How much do you get paid weekly? $";
 		double salary;
 		cin >> salary;
@@ -94,14 +98,16 @@ void UBAccount::CalcDailyInc() {
 		double dailyInc = (retSalary / retDays);
 		setDailyInc(dailyInc);
 	}
+
+	this->CalcWMY();
 }
 
 void UBAccount::CalcWMY() {
 	double retWeeklyInc = getWeeklyInc();
 	if (retWeeklyInc == -1) {
-		double retDays = getDays();
+		double retHours = getHours();
 		double retDailyInc = getDailyInc();
-		double weeklyInc = retDailyInc * retDays;
+		double weeklyInc = retDailyInc * retHours;
 		setWeeklyInc(weeklyInc);
 		retWeeklyInc = weeklyInc;
 	}
@@ -111,6 +117,38 @@ void UBAccount::CalcWMY() {
 
 	double yearlyInc = monthlyInc * 12;
 	setYearlyInc(yearlyInc);
+
+	this->WriteTo();
+}
+
+void UBAccount::WriteTo() {
+	//cout << "Im in here" << endl;
+	string userName = getUser();
+	//cout << "The user is: " << userName << endl;
+	ifstream UBfile;
+	UBfile.open("UBrokeAccts.txt");
+	string searchStr;
+	while (UBfile >> searchStr) {
+		//cout << "Im in the func" << endl;
+		if (searchStr == userName)
+		{
+			//cout << "Im in the func" << endl;
+			UBfile.close();
+			//cout << "Im in the func" << endl;
+			double dailyInc = getDailyInc();
+			//cout << "Daily: " << dailyInc << endl;
+			double weeklyInc = getWeeklyInc();
+			//cout << "Weekly: " << weeklyInc << endl;
+			double monthlyInc = getMonthlyInc();
+			//cout << "Monthly: " << monthlyInc << endl;
+			double yearlInc = getYearlyInc();
+			//cout << "Yearly: " << yearlyInc << endl;
+			ofstream print("UBrokeAccts.txt", ios_base::app);
+			print << setw(3) << setfill(' ') << setw(13) << dailyInc << setw(3) << setfill(' ') << setw(13) << weeklyInc << setw(3) << setfill(' ') << setw(13) << monthlyInc << setw(3) << setfill(' ') << setw(13) << yearlyInc << "\n";
+			print.close();
+			break;
+		}
+	}
 }
 
 void UBAccount::CalcMetro() {
@@ -197,6 +235,53 @@ void UBAccount::OPMetro(int costRTD, int costETD) {
 		}
 		else {
 			cout << "Continue paying $" << totalCostD << "a day for your Metrocards." << endl;
+			cout << "And with 5% cash bonus on any Metrocard purchases or additions above or equal to $5.50, it is most optimal to pay for your daily Metrocard in a single payment of " << totalCostD << ", which will result in a " << totalCostD * 0.05 << " added bonus." << endl;
 		}
 	}
+}
+
+void UBAccount::MakeChanges() {
+	cout << "What do you want to change about your account?" << endl;
+	cout << "1 | " << endl;
+	cout << "2 | " << endl;
+	cout << "3 | " << endl;
+	cout << "4 | " << endl;
+	cout << "5 | " << endl;
+	cout << "6 | " << endl;
+
+	bool displaymess = false;
+	int response;
+	do {
+		if (displaymess == true) {
+			cout << "Anything else you want to change?" << endl;
+			cin >> response;
+		}
+		switch (response) {
+			case 1:
+				displaymess = true;
+				break;
+			case 2:
+				displaymess= true;
+				break;
+			case 3:
+				displaymess = true;
+				break;
+			case 4:
+				displaymess = true;
+				break;
+			case 5:
+				displaymess = true;
+				break;
+			case 6:
+				displaymess = true;
+				break;
+			case 9:
+				displaymess = false;
+				break;
+			default:
+				cout << "Oops! That's not an available option." << endl;
+				displaymess = false;
+				break;
+		}
+	} while (response != 9);
 }
