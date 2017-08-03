@@ -2,7 +2,10 @@
 #include "stdafx.h"
 #include <ctime>
 #include <utility>
+#include <algorithm>
+#include <cstring>
 #include <string>
+#include <sstream>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -95,6 +98,7 @@ class UBAccount {
 
 	private:
 		string userName;
+		//bool changing;
 		double salary;
 		double numof_hours;
 		double numof_days;
