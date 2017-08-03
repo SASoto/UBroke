@@ -35,8 +35,9 @@ class UBAccount {
 		int hour_or_week;
 		void CheckUser();
 		void RetrieveInfo();
-		void ChangeUser(string);
 		void Questionnaire();
+		void ChangeUser(string);
+		void CopyOver();
 		void CalcDailyInc(string);
 		void CalcWMY();
 		void WriteTo();

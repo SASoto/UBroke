@@ -41,17 +41,17 @@ int main()
 			break;
 		case 9:
 			displaymess = false;
-			cout << "Take care!" << endl;
-			char response;
-			cin >> response;
-
-			return 0;
+			break;
 		default:
 			displaymess = false;
 			cout << "Oops! That's not an available option." << endl;
 			break;
 		}
-		cout << "Anything more? ";
 	} while (subject != 9);
+
+	cout << "Take care!" << endl;
+	char response;
+	cin >> response;
+	return 0;
 }
 

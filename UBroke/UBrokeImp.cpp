@@ -148,59 +148,55 @@ void UBAccount::ChangeUser(string newUserName) {
 
 	//char searchChar;
 	string searchStr;
+	int madeChange = 0;
+	//string tempForOne;
 	//string wholeLine;
-	while (UBfile >> searchStr/*!UBfile.eof()*/) {
+	while (UBfile >> searchStr) {
 		//UBfile.get(searchChar);
-
+		string tempForOne = searchStr;
 		//stringstream stream;
 		//stream << searchChar;
 		//stream >> searchStr;
-		if (searchStr == currUserName)
-		{
-			//UBfile.close();
-			//this->changing = true;
-			/*ofstream print;
-			print.open("UBrokeAccts.txt");
-			print << newUserName << setfill(' ') << setw(lof_Spaces);
-			print.close();*/
-			//setUser(newUserName);
-			//this->WriteTo();
-			double dailyInc = getDailyInc();
-			//cout << "Daily: " << dailyInc << endl;
-			double weeklyInc = getWeeklyInc();
-			//cout << "Weekly: " << weeklyInc << endl;
-			double monthlyInc = getMonthlyInc();
-			//cout << "Monthly: " << monthlyInc << endl;
-			double yearlInc = getYearlyInc();
-			//cout << "Yearly: " << yearlyInc << endl;
-			//stringstream newLine;
-			//newLine << newUserName << setw(3) << setfill(' ') << setw(13) << dailyInc << setw(3) << setfill(' ') << setw(13) << weeklyInc << setw(3) << setfill(' ') << setw(13) << monthlyInc << setw(3) << setfill(' ') << setw(13) << yearlyInc << "\n";
-			//ofstream print;
-			//print.open("UBrokeAccts.txt");
-			//searchStr.replace(newLine.str());
-			//ofstream print("Demofile.txt", ios_base::app);
-			Tempfile << newUserName << setw(3) << setfill(' ') << setw(13) << dailyInc << setw(3) << setfill(' ') << setw(13) << weeklyInc << setw(3) << setfill(' ') << setw(13) << monthlyInc << setw(3) << setfill(' ') << setw(13) << yearlyInc << "\n";
-			//print.close();
-			//UBfile.close();
-			setUser(newUserName);
-		}
-		else {
-			cout << "IN SECOND PART NOW" << endl;
-			string addLine;
-			//stringstream styleStream;
-			while (getline(UBfile, searchStr)) {
-				addLine += searchStr;
-				addLine.push_back('\n');
-				//addLine.insert(styleStream);
-				//styleStream << searchStr;
-				//styleStream << setw(3) << setfill(' ') << setw(13);
-				Tempfile << addLine;//styleStream.str();//addLine ;
+		cout << "CURR: " << currUserName << endl;
+		cout << "STR: " << searchStr << endl;
+		//if (madeChange == 1) { madeChange = 0; }
+		//else {
+			if (searchStr == currUserName) {
+				//ofstream Tempfile("Tempfile.txt", ios_base::app);
+				double dailyInc = getDailyInc();
+				//cout << "Daily: " << dailyInc << endl;
+				double weeklyInc = getWeeklyInc();
+				//cout << "Weekly: " << weeklyInc << endl;
+				double monthlyInc = getMonthlyInc();
+				//cout << "Monthly: " << monthlyInc << endl;
+				double yearlInc = getYearlyInc();
+				cout << "NEW: " << newUserName << endl;
+				Tempfile << newUserName << setw(3) << setfill(' ') << setw(13) << ""/*<< dailyInc << setw(3) << setfill(' ') << setw(13) << weeklyInc << setw(3) << setfill(' ') << setw(13) << monthlyInc << setw(3) << setfill(' ') << setw(13) << yearlyInc << "\n"*/;
+				//print.close();
+				//UBfile.close();
+				setUser(newUserName);
+				//madeChange = 1;
+				//Tempfile.close();
 			}
-			//addLine.clear();
-		}
+			else {
+				//ofstream Tempfile("Tempfile.txt", ios_base::app);
+				cout << "IN SECOND PART NOW" << endl;
+				string addLine;
+				if (getline(UBfile, searchStr)) {
+					addLine += tempForOne;
+					addLine += searchStr;
+					//addLine.push_back('\n');
+					Tempfile << addLine << "\n";
+				}
+			}
+		//}
 	}
 	UBfile.close();
 	Tempfile.close();
+}
+
+void UBAccount::CopyOver() {
+
 }
 
 void UBAccount::CalcDailyInc(string getsPaid) {
