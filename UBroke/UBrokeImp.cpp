@@ -193,10 +193,29 @@ void UBAccount::ChangeUser(string newUserName) {
 	}
 	UBfile.close();
 	Tempfile.close();
+
+	this->CopyOver();
 }
 
 void UBAccount::CopyOver() {
+	ofstream rewriteMain("UBrokeAccts.txt", fstream::trunc);
+	rewriteMain.close();
+	
+	ifstream Tempfile;
+	Tempfile.open("TempFile.txt");
+	ofstream UBfile("UBrokeAccts.txt", ios_base::app);
 
+	string searchStr;
+	while (getline(Tempfile, searchStr)) {
+		string addLine;
+		addLine += searchStr;
+		UBfile << addLine << "\n";
+	}
+	Tempfile.close();
+	UBfile.close();
+
+	ofstream rewriteTemp("TempFile.txt", fstream::trunc);
+	rewriteTemp.close();
 }
 
 void UBAccount::CalcDailyInc(string getsPaid) {
