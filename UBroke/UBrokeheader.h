@@ -21,12 +21,6 @@ extern double sevenUP;
 extern double sevenExpP;
 extern double thirtyUP;
 
-extern int lof_Spaces;
-/*extern double dailyCost;
-extern double weeklyCost;
-extern double monthlyCost;
-extern double yearlyCost;*/
-
 enum Months {January, February, March, April, May, June, July,
 			August, September, October, November, December};
 
@@ -100,7 +94,6 @@ class UBAccount {
 
 	private:
 		string userName;
-		//bool changing;
 		double salary;
 		double numof_hours;
 		double numof_days;

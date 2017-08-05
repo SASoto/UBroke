@@ -14,8 +14,6 @@ int main()
 	user.CheckUser();
 	
 	cout << "Welcome " << user.getUser() << endl;
-	//user.CalcDailyInc();
-	//user.CalcWMY();
 
 	bool displaymess = false;
 	int subject = 0;

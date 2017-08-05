@@ -7,9 +7,7 @@ double sevenUP = 32.00;
 double sevenExpP = 59.50;
 double thirtyUP = 121.00;
 
-int lof_Spaces;
 bool writeTo = true;
-//bool changeSalary = false;
 
 void UBAccount::CheckUser() {
 	string response;
@@ -40,12 +38,6 @@ void UBAccount::CheckUser() {
 			cin >> response;
 
 			if (response == "yes" || response == "Yes" || response == "y" || response == "Y") {
-				//ofstream UBfile;
-				//UBfile.open("UBrokeAccts.txt");
-				lof_Spaces = 13 - userName.length();
-				/*ofstream print("UBrokeAccts.txt", ios_base::app);
-				print << userName << setfill(' ') << setw(lof_Spaces);
-				print.close();*/
 				setUser(userName);
 
 				this->Questionnaire();
@@ -98,7 +90,6 @@ void UBAccount::Questionnaire() {
 
 	if (getsPaid == "hourly" || getsPaid == "Hourly")
 	{
-		//hour_or_week = 0;
 		cout << "How much do you get paid hourly? $";
 		double salary;
 		cin >> salary;
@@ -112,7 +103,6 @@ void UBAccount::Questionnaire() {
 	}
 	else
 	{
-		//hour_or_week = 1;
 		cout << "How much do you get paid weekly? $";
 		double salary;
 		cin >> salary;
@@ -134,14 +124,9 @@ void UBAccount::Questionnaire() {
 
 void UBAccount::ChangeUser(string newUserName) {
 	string currUserName = getUser();
-	int len = currUserName.length();
-	int reqSpace = lof_Spaces + len;
-	if (reqSpace > 13) {
-		while (reqSpace != 13) {
-			reqSpace -= 1;
-			lof_Spaces -= 1;
-		}
-	}
+
+	int len = newUserName.length();
+	int reqSpace = 13 - len;
 
 	ifstream UBfile;
 	UBfile.open("UBrokeAccts.txt");
@@ -160,7 +145,7 @@ void UBAccount::ChangeUser(string newUserName) {
 			//cout << "Monthly: " << monthlyInc << endl;
 			double yearlInc = getYearlyInc();
 
-			Tempfile << newUserName << setw(3) << setfill(' ') << setw(13) << "";
+			Tempfile << newUserName << setfill(' ') << setw(reqSpace) << "";
 			setUser(newUserName);
 		}
 		else {
@@ -181,6 +166,9 @@ void UBAccount::ChangeUser(string newUserName) {
 void UBAccount::ChangeSalary() {
 	string currUserName = getUser();
 
+	int len = currUserName.length();
+	int reqSpace = 13 - len;
+
 	ifstream UBfile;
 	UBfile.open("UBrokeAccts.txt");
 	ofstream Tempfile("Tempfile.txt", ios_base::app);
@@ -199,7 +187,7 @@ void UBAccount::ChangeSalary() {
 			cout << "Monthly: " << monthlyInc << endl;
 			double yearlInc = getYearlyInc();
 
-			Tempfile << currUserName << setw(3) << setfill(' ') << setw(13) << dailyInc << setw(3) << setfill(' ') << setw(13) << weeklyInc << setw(3) << setfill(' ') << setw(13) << monthlyInc << setw(3) << setfill(' ') << setw(13) << yearlyInc << "\n";
+			Tempfile << currUserName << setfill(' ') << setw(reqSpace) << dailyInc << setw(3) << setfill(' ') << setw(13) << weeklyInc << setw(3) << setfill(' ') << setw(13) << monthlyInc << setw(3) << setfill(' ') << setw(13) << yearlyInc << "\n";
 			skipOne = true;
 		}
 		else if(!skipOne) {
@@ -268,7 +256,6 @@ void UBAccount::CalcWMY() {
 		setWeeklyInc(weeklyInc);
 		retWeeklyInc = weeklyInc;
 	}
-	//else if (retWeeklyInc != -1 && changeSalary) {}
 
 	double monthlyInc = retWeeklyInc * (30.42 / 7);
 	setMonthlyInc(monthlyInc);
@@ -283,7 +270,10 @@ void UBAccount::CalcWMY() {
 }
 
 void UBAccount::WriteTo() {
-		string userName = getUser();
+		string currUserName = getUser();
+
+		int len = currUserName.length();
+		int reqSpace = 13 - len;
 
 		double dailyInc = getDailyInc();
 		cout << "Daily: " << dailyInc << endl;
@@ -294,7 +284,7 @@ void UBAccount::WriteTo() {
 		double yearlInc = getYearlyInc();
 		cout << "Yearly: " << yearlyInc << endl;
 		ofstream print("UBrokeAccts.txt", ios_base::app);
-		print << userName << setw(3) << setfill(' ') << setw(13) << dailyInc << setw(3) << setfill(' ') << setw(13) << weeklyInc << setw(3) << setfill(' ') << setw(13) << monthlyInc << setw(3) << setfill(' ') << setw(13) << yearlyInc << "\n";
+		print << userName << setfill(' ') << setw(reqSpace) << dailyInc << setw(3) << setfill(' ') << setw(13) << weeklyInc << setw(3) << setfill(' ') << setw(13) << monthlyInc << setw(3) << setfill(' ') << setw(13) << yearlyInc << "\n";
 		print.close();
 }
 
@@ -364,13 +354,7 @@ void UBAccount::OPMetro(double costRTD, double costETD) {
 	double totalCostD = costRTD + costETD;
 	double costSUPM = sevenUP * (30.42 / 7);
 	if (totalCostD > sevenUP) {
-		//if (costSUPM > thirtyUP) {
 			cout << "The most optimal way to pay for your bus/train rides each month is to buy a single thirty-day unlimited Metrocard." << endl;
-		//}
-		/*(else {
-			double costLeftOver = thirtyUP - costSUPM;
-			costLeftOver / regR;
-		}*/
 	}
 	else {
 		double costM = (costRTD + costETD) * (30.42 / 7);
@@ -413,10 +397,8 @@ void UBAccount::MakeChanges() {
 			case 2:
 				cout << "In order to change your salary you must first answer the questions you were presented when you first made your account, in case any of that information has changed." << endl;
 				writeTo = false;
-				//changeSalary = true;
 				this->Questionnaire();
 				writeTo = true;
-				//changeSalary = false;
 				displaymess= true;
 				break;
 			case 9:
