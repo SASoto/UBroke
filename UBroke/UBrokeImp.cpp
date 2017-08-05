@@ -8,6 +8,8 @@ double sevenExpP = 59.50;
 double thirtyUP = 121.00;
 
 int lof_Spaces;
+bool writeTo = true;
+//bool changeSalary = false;
 
 void UBAccount::CheckUser() {
 	string response;
@@ -106,7 +108,6 @@ void UBAccount::Questionnaire() {
 		int hours;
 		cin >> hours;
 
-		int numof_hours = 0;
 		setHours(hours);
 	}
 	else
@@ -146,50 +147,73 @@ void UBAccount::ChangeUser(string newUserName) {
 	UBfile.open("UBrokeAccts.txt");
 	ofstream Tempfile("Tempfile.txt", ios_base::app);
 
-	//char searchChar;
 	string searchStr;
-	int madeChange = 0;
-	//string tempForOne;
-	//string wholeLine;
 	while (UBfile >> searchStr) {
-		//UBfile.get(searchChar);
-		string tempForOne = searchStr;
-		//stringstream stream;
-		//stream << searchChar;
-		//stream >> searchStr;
-		cout << "CURR: " << currUserName << endl;
-		cout << "STR: " << searchStr << endl;
-		//if (madeChange == 1) { madeChange = 0; }
-		//else {
-			if (searchStr == currUserName) {
-				//ofstream Tempfile("Tempfile.txt", ios_base::app);
-				double dailyInc = getDailyInc();
-				//cout << "Daily: " << dailyInc << endl;
-				double weeklyInc = getWeeklyInc();
-				//cout << "Weekly: " << weeklyInc << endl;
-				double monthlyInc = getMonthlyInc();
-				//cout << "Monthly: " << monthlyInc << endl;
-				double yearlInc = getYearlyInc();
-				cout << "NEW: " << newUserName << endl;
-				Tempfile << newUserName << setw(3) << setfill(' ') << setw(13) << ""/*<< dailyInc << setw(3) << setfill(' ') << setw(13) << weeklyInc << setw(3) << setfill(' ') << setw(13) << monthlyInc << setw(3) << setfill(' ') << setw(13) << yearlyInc << "\n"*/;
-				//print.close();
-				//UBfile.close();
-				setUser(newUserName);
-				//madeChange = 1;
-				//Tempfile.close();
+		string userForEach = searchStr;
+
+		if (searchStr == currUserName) {
+			double dailyInc = getDailyInc();
+			//cout << "Daily: " << dailyInc << endl;
+			double weeklyInc = getWeeklyInc();
+			//cout << "Weekly: " << weeklyInc << endl;
+			double monthlyInc = getMonthlyInc();
+			//cout << "Monthly: " << monthlyInc << endl;
+			double yearlInc = getYearlyInc();
+
+			Tempfile << newUserName << setw(3) << setfill(' ') << setw(13) << "";
+			setUser(newUserName);
+		}
+		else {
+			string addLine;
+			if (getline(UBfile, searchStr)) {
+				addLine += userForEach;
+				addLine += searchStr;
+				Tempfile << addLine << "\n";
 			}
-			else {
-				//ofstream Tempfile("Tempfile.txt", ios_base::app);
-				cout << "IN SECOND PART NOW" << endl;
-				string addLine;
-				if (getline(UBfile, searchStr)) {
-					addLine += tempForOne;
-					addLine += searchStr;
-					//addLine.push_back('\n');
-					Tempfile << addLine << "\n";
-				}
+		}
+	}
+	UBfile.close();
+	Tempfile.close();
+
+	this->CopyOver();
+}
+
+void UBAccount::ChangeSalary() {
+	string currUserName = getUser();
+
+	ifstream UBfile;
+	UBfile.open("UBrokeAccts.txt");
+	ofstream Tempfile("Tempfile.txt", ios_base::app);
+
+	string searchStr;
+	bool skipOne = false;
+	while (UBfile >> searchStr) {
+		string userForEach = searchStr;
+
+		if (searchStr == currUserName) {
+			double dailyInc = getDailyInc();
+			cout << "Daily: " << dailyInc << endl;
+			double weeklyInc = getWeeklyInc();
+			cout << "Weekly: " << weeklyInc << endl;
+			double monthlyInc = getMonthlyInc();
+			cout << "Monthly: " << monthlyInc << endl;
+			double yearlInc = getYearlyInc();
+
+			Tempfile << currUserName << setw(3) << setfill(' ') << setw(13) << dailyInc << setw(3) << setfill(' ') << setw(13) << weeklyInc << setw(3) << setfill(' ') << setw(13) << monthlyInc << setw(3) << setfill(' ') << setw(13) << yearlyInc << "\n";
+			skipOne = true;
+		}
+		else if(!skipOne) {
+			string addLine;
+			if (getline(UBfile, searchStr)) {
+				addLine += userForEach;
+				addLine += searchStr;
+				Tempfile << addLine << "\n";
 			}
-		//}
+		}
+		else {
+			if (getline(UBfile, searchStr)) {}
+			skipOne = false;
+		}
 	}
 	UBfile.close();
 	Tempfile.close();
@@ -225,6 +249,7 @@ void UBAccount::CalcDailyInc(string getsPaid) {
 	if (getsPaid == "hourly" || getsPaid == "Hourly") {
 		double dailyInc = retHours * retSalary;
 		setDailyInc(dailyInc);
+		setWeeklyInc(-1);
 	}
 	else {
 		double dailyInc = (retSalary / retDays);
@@ -243,6 +268,7 @@ void UBAccount::CalcWMY() {
 		setWeeklyInc(weeklyInc);
 		retWeeklyInc = weeklyInc;
 	}
+	//else if (retWeeklyInc != -1 && changeSalary) {}
 
 	double monthlyInc = retWeeklyInc * (30.42 / 7);
 	setMonthlyInc(monthlyInc);
@@ -250,34 +276,26 @@ void UBAccount::CalcWMY() {
 	double yearlyInc = monthlyInc * 12;
 	setYearlyInc(yearlyInc);
 
-	this->WriteTo();
+	if (writeTo)
+		this->WriteTo();
+	else
+		this->ChangeSalary();
 }
 
 void UBAccount::WriteTo() {
 		string userName = getUser();
 
-		//ifstream UBfile;
-		//UBfile.open("UBrokeAccts.txt");
-		//string searchStr;
-		/*while (UBfile >> searchStr) {
-			if (searchStr == userName)
-			{*/
-				//UBfile.close();
-				//string userName = getUser();
-				double dailyInc = getDailyInc();
-				cout << "Daily: " << dailyInc << endl;
-				double weeklyInc = getWeeklyInc();
-				cout << "Weekly: " << weeklyInc << endl;
-				double monthlyInc = getMonthlyInc();
-				cout << "Monthly: " << monthlyInc << endl;
-				double yearlInc = getYearlyInc();
-				cout << "Yearly: " << yearlyInc << endl;
-				ofstream print("UBrokeAccts.txt", ios_base::app);
-				print << userName << setw(3) << setfill(' ') << setw(13) << dailyInc << setw(3) << setfill(' ') << setw(13) << weeklyInc << setw(3) << setfill(' ') << setw(13) << monthlyInc << setw(3) << setfill(' ') << setw(13) << yearlyInc << "\n";
-				print.close();
-				//break;
-			//}
-		//}
+		double dailyInc = getDailyInc();
+		cout << "Daily: " << dailyInc << endl;
+		double weeklyInc = getWeeklyInc();
+		cout << "Weekly: " << weeklyInc << endl;
+		double monthlyInc = getMonthlyInc();
+		cout << "Monthly: " << monthlyInc << endl;
+		double yearlInc = getYearlyInc();
+		cout << "Yearly: " << yearlyInc << endl;
+		ofstream print("UBrokeAccts.txt", ios_base::app);
+		print << userName << setw(3) << setfill(' ') << setw(13) << dailyInc << setw(3) << setfill(' ') << setw(13) << weeklyInc << setw(3) << setfill(' ') << setw(13) << monthlyInc << setw(3) << setfill(' ') << setw(13) << yearlyInc << "\n";
+		print.close();
 }
 
 void UBAccount::CalcMetro() {
@@ -393,8 +411,12 @@ void UBAccount::MakeChanges() {
 				break;
 			}
 			case 2:
-				cout << "In order to change your salary information, you must first answer a few questions beforehand." << endl;
+				cout << "In order to change your salary you must first answer the questions you were presented when you first made your account, in case any of that information has changed." << endl;
+				writeTo = false;
+				//changeSalary = true;
 				this->Questionnaire();
+				writeTo = true;
+				//changeSalary = false;
 				displaymess= true;
 				break;
 			case 9:

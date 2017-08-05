@@ -37,6 +37,7 @@ class UBAccount {
 		void RetrieveInfo();
 		void Questionnaire();
 		void ChangeUser(string);
+		void ChangeSalary();
 		void CopyOver();
 		void CalcDailyInc(string);
 		void CalcWMY();
