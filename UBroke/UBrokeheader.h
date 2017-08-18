@@ -21,12 +21,11 @@ extern double sevenUP;
 extern double sevenExpP;
 extern double thirtyUP;
 
-enum Months {January, February, March, April, May, June, July,
-			August, September, October, November, December};
+/*enum Months {January, February, March, April, May, June, July,
+			August, September, October, November, December};*/
 
 class UBAccount {
 	public:
-		int hour_or_week;
 		void CheckUser();
 		void RetrieveInfo();
 		void Questionnaire();
